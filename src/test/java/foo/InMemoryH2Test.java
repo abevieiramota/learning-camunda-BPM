@@ -1,20 +1,16 @@
 package foo;
 
-import static org.camunda.bpm.engine.test.assertions.ProcessEngineAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineAssertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.ProcessEngineAssertions.init;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.complete;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.task;
-import static org.junit.Assert.assertEquals;
 
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 
-import org.camunda.bpm.engine.impl.cmmn.cmd.CompleteCaseExecutionCmd;
+import org.camunda.bpm.consulting.process_test_coverage.ProcessTestCoverage;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
-import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
@@ -42,7 +38,7 @@ public class InMemoryH2Test {
 	public void setup() {
 		init(rule.getProcessEngine());
 	}
-
+	
 	@Test
 	@Deployment(resources = "process.bpmn")
 	public void testParsingAndDeployment() {
@@ -50,12 +46,12 @@ public class InMemoryH2Test {
 		HashMap<String, Object> processVariables = new HashMap<String, Object>();
 		processVariables.put(
 				"content",
-				"camunda training - User task gateway brhuehuehue em: "
+				"camunda training - ProcessTestCoverage brhuehuehue em: "
 						+ new SimpleDateFormat("HH:mm:ss")
 								.format(new GregorianCalendar().getTime()));
 
 		ProcessInstance processInstance = rule.getRuntimeService()
-				.startProcessInstanceByKey("learning-camunda-BPM",
+				.startProcessInstanceByKey(PROCESS_DEFINITION_KEY,
 						processVariables);
 
 		assertThat(processInstance).isStarted().isWaitingAt("user_task_review_process");
@@ -63,6 +59,8 @@ public class InMemoryH2Test {
 		complete(task(), Variables.createVariables().putValue("approved", Boolean.TRUE));
 		
 		assertThat(processInstance).isEnded().hasPassed("hello_world", "groovy_script", "user_task_review_process", "create_twitter");
+		
+		ProcessTestCoverage.calculate(processInstance, rule.getProcessEngine());
 	}
 	
 	@Test
@@ -77,7 +75,7 @@ public class InMemoryH2Test {
 								.format(new GregorianCalendar().getTime()));
 
 		ProcessInstance processInstance = rule.getRuntimeService()
-				.startProcessInstanceByKey("learning-camunda-BPM",
+				.startProcessInstanceByKey(PROCESS_DEFINITION_KEY,
 						processVariables);
 
 		assertThat(processInstance).isStarted().isWaitingAt("user_task_review_process");
@@ -85,6 +83,8 @@ public class InMemoryH2Test {
 		complete(task(), Variables.createVariables().putValue("approved", Boolean.FALSE));
 		
 		assertThat(processInstance).isEnded().hasPassed("hello_world", "groovy_script", "user_task_review_process");
+		
+		ProcessTestCoverage.calculate(processInstance, rule.getProcessEngine());
 	}
 
 }
