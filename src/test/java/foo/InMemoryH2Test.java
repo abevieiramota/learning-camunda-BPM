@@ -15,6 +15,7 @@ import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.engine.variable.Variables;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -41,6 +42,7 @@ public class InMemoryH2Test {
 	
 	@Test
 	@Deployment(resources = "process.bpmn")
+	@Ignore
 	public void testParsingAndDeployment() {
 
 		HashMap<String, Object> processVariables = new HashMap<String, Object>();
