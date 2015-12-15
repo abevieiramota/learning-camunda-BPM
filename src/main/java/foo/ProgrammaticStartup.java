@@ -12,7 +12,6 @@ public class ProgrammaticStartup {
 		processEngine.getRepositoryService().createDeployment().addClasspathResource("process.bpmn").deploy();
 		
 		processEngine.getRuntimeService().startProcessInstanceByKey("learning-camunda-BPM");
-
 	}
 
 }
