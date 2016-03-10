@@ -22,6 +22,7 @@ import org.junit.Test;
 /**
  * Test case starting an in-memory database-backed Process Engine.
  */
+@Ignore
 public class InMemoryH2Test {
 
 	@Rule
